@@ -3,7 +3,7 @@
 Summary: TCP port reservation utility
 Name: portreserve
 Version: 0.0.5
-Release: 19%{?dist}
+Release: 20%{?dist}
 License: GPLv2+
 Group: System Environment/Daemons
 URL: http://cyberelk.net/tim/portreserve/
@@ -43,13 +43,13 @@ make
 %install
 rm -rf %{buildroot}
 make DESTDIR=%{buildroot} install
-mkdir -p %{buildroot}%{_localstatedir}/run/portreserve
+mkdir -p %{buildroot}/run/portreserve
 mkdir -p %{buildroot}%{_unitdir}
 install -m644 %{SOURCE1} %{buildroot}%{_unitdir}/portreserve.service
 mkdir -p %{buildroot}%{_sysconfdir}/portreserve
 mkdir -p %{buildroot}%{_tmpfilesdir}
 cat <<EOF > %{buildroot}%{_tmpfilesdir}/portreserve.conf
-d %{_localstatedir}/run/portreserve 0755 root root 10d
+d /run/portreserve 0755 root root 10d
 EOF
 
 %clean
@@ -77,7 +77,7 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root)
 %doc ChangeLog README COPYING NEWS
-%dir %{_localstatedir}/run/portreserve
+%dir /run/portreserve
 %dir %{_sysconfdir}/portreserve
 %config %{_tmpfilesdir}/portreserve.conf
 %{_unitdir}/portreserve.service
@@ -85,6 +85,9 @@ rm -rf %{buildroot}
 %{_mandir}/*/*
 
 %changelog
+* Tue Feb 25 2025 Michal Ruprich <mruprich@redhat.com> - 0.0.5-20
+- RHEL-2863 - Creating tmp files for systemd on behalf of portreserve references legacy directory /var/run/ instead of /run
+
 * Fri Feb 09 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 0.0.5-19
 - Escape macros in %%changelog
 
